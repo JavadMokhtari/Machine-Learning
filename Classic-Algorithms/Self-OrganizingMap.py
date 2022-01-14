@@ -90,7 +90,7 @@ def main():
 
     img = ax.scatter(x1, x2, x3, s=x4, c=clusters, cmap='turbo')
     fig.colorbar(img)
-    plt.savefig('../Results/SOM.scatter.jpg')
+    # plt.savefig('../Results/SOM.scatter.jpg')
     plt.show()
 
 

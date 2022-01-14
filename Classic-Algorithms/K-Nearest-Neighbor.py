@@ -30,7 +30,7 @@ class KNN:
             neighbors.append(distances[i][0])
         return neighbors
 
-    # We can classify an input data by the trining data with predict_classification() function
+    # We can classify an input data by the training data with predict_classification() function
     def predict_classification(self, train, test_row):
         neighbors = self.get_neighbors(train, test_row)
         output_values = [row[-1] for row in neighbors]

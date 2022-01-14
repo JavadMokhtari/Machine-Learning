@@ -2,7 +2,6 @@ import numpy as np
 from math import sqrt
 from matplotlib import pyplot as plt
 
-
 K = 3
 
 
@@ -30,7 +29,7 @@ def K_means(dataset):
     cluster_values = np.empty((dataset_size, 1))
     error_vector = np.empty(K)
     error = 1
-    epoch = 0
+    iteration = 0
 
     while error > 0.005:
         for i in range(dataset_size):
@@ -54,8 +53,8 @@ def K_means(dataset):
             error_vector[i] = euclidean_distance(new_centers[i, :], centers[i, :])
         error = sqrt(np.dot(error_vector, error_vector))
 
-        epoch += 1
-        print("The amount of centers changing in round {:2d}: {:.5f}".format(epoch, error))
+        iteration += 1
+        print("Error in iteration {:2d}: {:.5f}".format(iteration, error))
         centers = np.copy(new_centers)
 
     return clustered_dataset

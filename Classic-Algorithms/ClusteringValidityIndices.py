@@ -11,6 +11,47 @@ def euclidean_distance(row1, row2):
     return distance
 
 
+# Returns mean row of cluster as center
+def get_center(cluster):
+    column_values = [cluster[:, i] for i in range(cluster.shape[1])]
+    center = [np.sum(column_values[i]) / cluster.shape[0] for i in range(cluster.shape[1])]
+    return center
+
+
+##############################################
+# Root Means Square Standard Deviation Index #
+##############################################
+class RMSSTD:
+    def __init__(self, clusters_list):
+        self.clusters = clusters_list
+
+    # Suppose set D contains n nodes with p dimensions. Sum of square parameter obtain as following function
+    @staticmethod
+    def sum_of_square(nodes_group):
+        center = get_center(nodes_group)
+        SS = 0
+        for node in nodes_group:
+            dist_square = euclidean_distance(node, center) ** 2
+            SS += dist_square
+        return SS
+
+    def RMDDTD_index(self):
+        K = len(self.clusters)
+        SS_values = list()
+        n = 0
+        p = self.clusters[0].shape[1]
+        for i in range(K):
+            SSi = self.sum_of_square(self.clusters[i])
+            SS_values.append(SSi)
+            n += self.clusters[i].shape[0]
+
+        RMSSTD_value = sqrt(sum(SS_values) / (p * (n - K)))
+        return RMSSTD_value
+
+
+################
+# Dunn's Index #
+################
 class Dunn:
     # Returns Dunn's index value with getting a list from clusters in input
     def __init__(self, clusters_list):
@@ -61,6 +102,9 @@ class Dunn:
         return Dunn_value
 
 
+########################
+# Davies-Bouldin Index #
+########################
 class Davies_Bouldin:
     # Returns Davies-Bouldin index value with getting a list from clusters in input
     def __init__(self, clusters_list):
@@ -69,16 +113,10 @@ class Davies_Bouldin:
         self.dispersion = float('inf')
         self.dissimilarity = 0
 
-    @staticmethod
-    def get_center(cluster):
-        column_values = [cluster[:, i] for i in range(cluster.shape[1])]
-        center = [np.sum(column_values[i]) / cluster.shape[0] for i in range(cluster.shape[1])]
-        return center
-
     # The first parameter of Davies-Bouldin index
     def dispersion_calculation(self, cluster):
         dist_sum = 0
-        center = self.get_center(cluster)
+        center = get_center(cluster)
         for row in cluster:
             dist = euclidean_distance(row, center)
             dist_sum += dist
@@ -86,8 +124,8 @@ class Davies_Bouldin:
 
     # The second parameter of Davies-Bouldin index
     def dissimilarity_calculation(self, cluster1, cluster2):
-        center1 = self.get_center(cluster1)
-        center2 = self.get_center(cluster2)
+        center1 = get_center(cluster1)
+        center2 = get_center(cluster2)
         self.dissimilarity = euclidean_distance(center1, center2)
 
     # Calculating Davies-Bouldin index value

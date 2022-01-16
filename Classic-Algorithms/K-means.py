@@ -1,9 +1,7 @@
 import numpy as np
 from math import sqrt
 from matplotlib import pyplot as plt
-from ClusteringValidityIndices import Dunn
-
-k = 4
+from ClusteringValidityIndices import Dunn, Davies_Bouldin
 
 
 # Is defined for calculating Euclidean distance between two rows of data
@@ -18,11 +16,8 @@ def euclidean_distance(row1, row2):
 # Returns mean of data as center
 def set_centers(cluster_data):
     column_values = [cluster_data[:, i] for i in range(cluster_data.shape[1] - 1)]
-    if cluster_data.shape[0] != 0:
-        center = np.array([np.sum(column_values[i]) / cluster_data.shape[0] for i in range(cluster_data.shape[1] - 1)])
-        return center
-    else:
-        return None
+    center = np.array([np.sum(column_values[i]) / cluster_data.shape[0] for i in range(cluster_data.shape[1] - 1)])
+    return center
 
 
 def K_means(dataset, K):
@@ -32,11 +27,11 @@ def K_means(dataset, K):
     new_centers = np.empty(centers.shape)
     cluster_values = np.empty((dataset_size, 1))
     error_vector = np.empty(K)
-    error = 1
+    error = 1.000000000000
     iteration = 0
     print("\n\nFor K = {}:\n".format(K))
 
-    while error > 0.005:
+    while error > 0.00005:
         for i in range(dataset_size):
             min_dist = float('inf')
             for j in range(K):
@@ -50,9 +45,7 @@ def K_means(dataset, K):
         # Updating centers
         for i in range(K):
             cluster = clustered_dataset[np.where(clustered_dataset[:, -1] == i)]
-            new_center = set_centers(cluster)
-            if new_center is not None:
-                new_centers[i, :] = new_center
+            new_centers[i, :] = set_centers(cluster)
 
         # Calculating distance between new centers and previous centers
         for i in range(K):
@@ -60,16 +53,38 @@ def K_means(dataset, K):
         error = sqrt(np.dot(error_vector, error_vector))
 
         iteration += 1
-        print("Error in iteration {:2d}: {:.5f}".format(iteration, error))
+        print("Relocation of centers in iteration {:2d}: {:.5f}".format(iteration, error))
         centers = np.copy(new_centers)
 
-    return clustered_dataset, centers
+    print('\n\n', 'The obtained centers are:', '\n\n', np.around(centers, decimals=2))
+    return clustered_dataset
 
 
 def main():
     # import iris data and clustering
     input_data = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
-    iris_clustered, centers = K_means(input_data, k)
+
+    k = 3
+    iris_clustered = K_means(input_data, k)
+
+    # Creating a list of clusters for CVI functions input
+    clusters_list = list()
+    for c in range(k):
+        cluster = iris_clustered[np.where(iris_clustered[:, -1] == c)]
+        clusters_list.append(cluster)
+
+    # Getting Dunn's index value
+    cvi = Dunn(clusters_list)
+    Dunn_value = cvi.Dun_index()
+
+    # Getting Davies-Bouldin index value
+    cvi = Davies_Bouldin(clusters_list)
+    DB_value = cvi.Davies_Bouldin_index()
+
+    # I consider an index that is obtained by dividing the Dunn's index by Davies-Bouldin index
+    my_index = Dunn_value / DB_value
+    print('\n\n', "Clustering Validity Index Value is: {:.2f}".format(my_index))
+    print("This index is obtained by dividing the Dunn's index by Davies-Bouldin index")
 
     # visualization of clustering result
     fig = plt.figure(figsize=(8, 6))
@@ -84,23 +99,6 @@ def main():
     img = ax.scatter(x1, x2, x3, s=x4, c=clusters_labels, cmap='turbo')
     fig.colorbar(img)
     # plt.savefig('../Results/K-means.scatter.jpg')
-
-    x1 = centers[:, 0]
-    x2 = centers[:, 1]
-    x3 = centers[:, 2]
-    x4 = centers[:, 3] * 20
-
-    img = ax.scatter(x1, x2, x3, s=x4, c="Yellow")
-    fig.colorbar(img)
-
-    clusters_list = list()
-    for i in range(k):
-        cluster = iris_clustered[np.where(iris_clustered[:, -1] == i)]
-        clusters_list.append(cluster)
-
-    cvi = Dunn(clusters_list)
-
-    print(cvi.Dun_index())
     plt.show()
 
 

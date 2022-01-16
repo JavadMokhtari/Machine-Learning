@@ -1,7 +1,7 @@
 import numpy as np
 from math import sqrt
 from matplotlib import pyplot as plt
-from ClusteringValidityIndices import Dunn, Davies_Bouldin
+from ClusteringValidityIndices import Dunn, Davies_Bouldin, RMSSTD
 
 
 # Is defined for calculating Euclidean distance between two rows of data
@@ -13,13 +13,6 @@ def euclidean_distance(row1, row2):
     return distance
 
 
-# Returns mean of data as center
-def set_centers(cluster_data):
-    column_values = [cluster_data[:, i] for i in range(cluster_data.shape[1] - 1)]
-    center = np.array([np.sum(column_values[i]) / cluster_data.shape[0] for i in range(cluster_data.shape[1] - 1)])
-    return center
-
-
 def K_means(dataset, K):
     dataset_size = dataset.shape[0]
     indx = np.random.choice(dataset_size, K, replace=False)
@@ -27,11 +20,11 @@ def K_means(dataset, K):
     new_centers = np.empty(centers.shape)
     cluster_values = np.empty((dataset_size, 1))
     error_vector = np.empty(K)
-    error = 1.000000000000
+    error = 1.000
     iteration = 0
-    print("\n\nFor K = {}:\n".format(K))
+    # print("\n\nFor K = {}:\n".format(K))
 
-    while error > 0.00005:
+    while error > 0.005:
         for i in range(dataset_size):
             min_dist = float('inf')
             for j in range(K):
@@ -45,7 +38,18 @@ def K_means(dataset, K):
         # Updating centers
         for i in range(K):
             cluster = clustered_dataset[np.where(clustered_dataset[:, -1] == i)]
-            new_centers[i, :] = set_centers(cluster)
+
+            if cluster.shape[0] == 0:
+                indx = np.random.randint(dataset_size)
+                new_center = dataset[indx, :]
+                print(new_center)
+
+            else:
+                column_values = [cluster[:, i] for i in range(cluster.shape[1] - 1)]
+                new_center = np.array(
+                    [np.sum(column_values[i]) / cluster.shape[0] for i in range(cluster.shape[1] - 1)])
+
+            new_centers[i, :] = new_center
 
         # Calculating distance between new centers and previous centers
         for i in range(K):
@@ -53,10 +57,10 @@ def K_means(dataset, K):
         error = sqrt(np.dot(error_vector, error_vector))
 
         iteration += 1
-        print("Relocation of centers in iteration {:2d}: {:.5f}".format(iteration, error))
+        # print("Relocation of centers in iteration {:2d}: {:.5f}".format(iteration, error))
         centers = np.copy(new_centers)
 
-    print('\n\n', 'The obtained centers are:', '\n\n', np.around(centers, decimals=2))
+    # print('\n\n', 'The obtained centers are:', '\n\n', np.around(centers, decimals=2))
     return clustered_dataset
 
 
@@ -83,7 +87,7 @@ def main():
 
     # I consider an index that is obtained by dividing the Dunn's index by Davies-Bouldin index
     my_index = Dunn_value / DB_value
-    print('\n\n', "Clustering Validity Index Value is: {:.2f}".format(my_index))
+    print('\n\n', "Clustering Validity Index Value is: {:.2f}\n".format(my_index), sep='')
     print("This index is obtained by dividing the Dunn's index by Davies-Bouldin index")
 
     # visualization of clustering result

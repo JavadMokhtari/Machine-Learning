@@ -28,7 +28,7 @@ class SelfOrganizingMap:
         self.learning_rate = 0.8/epoch
         self.epoch = epoch
 
-        # Initial weight matrix
+        # Initialization of weight matrix
         np.random.seed(1)
         self.weights = np.empty(self.num_output + (self.num_input,))
         for i in range(self.num_output[0]):
@@ -90,8 +90,8 @@ def main():
 
     img = ax.scatter(x1, x2, x3, s=x4, c=clusters, cmap='turbo')
     fig.colorbar(img)
-    # plt.savefig('../Results/SOM.scatter.jpg')
     plt.show()
+    plt.savefig('../Results/SOM.scatter.jpg')
 
 
 if __name__ == "__main__":

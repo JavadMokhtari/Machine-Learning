@@ -4,6 +4,7 @@ from math import sqrt
 RADIUS = 2
 
 
+# Is defined for calculating Euclidean distance between two row of data
 def euclidean_distance(row1, row2):
     distance = 0.0
     for i in range(len(row1)):
@@ -16,8 +17,6 @@ class ParzenWindow:
 
     def __init__(self, radius):
         self.radius = radius
-
-    # Is defined for calculating Euclidean distance between two row of data
 
     # Returns the K nearest neighbors of test_row as a list
     def get_window(self, train, test_row):
@@ -58,6 +57,7 @@ def main():
     data_in = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
     data_out = np.loadtxt('../Data/iris/iris_train_label.csv', delimiter=',')
     train_data = np.column_stack((data_in, data_out))
+
     # Import test data
     data_test_in = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
     data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
@@ -76,6 +76,7 @@ def main():
             print('False')
     performance = correct / len(data_test_out)
     print("\nAccuracy on test data: {:.2f}%\n".format(performance * 100))
+
     radius_values = np.arange(0.1, 10, 0.05)
     accuracies = list()
     for radius in radius_values:

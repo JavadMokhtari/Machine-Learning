@@ -4,7 +4,7 @@ from math import sqrt, log, ceil
 K = 10
 
 
-# Is defined for calculating Euclidean distance between two row of data
+# Is defined for calculating Euclidean distance between two rows of data
 def euclidean_distance(row1, row2):
     distance = 0.0
     for i in range(len(row1)):
@@ -54,6 +54,7 @@ def main():
     data_in = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
     data_out = np.loadtxt('../Data/iris/iris_train_label.csv', delimiter=',')
     train_data = np.column_stack((data_in, data_out))
+    
     # Import test data
     data_test_in = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
     data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')

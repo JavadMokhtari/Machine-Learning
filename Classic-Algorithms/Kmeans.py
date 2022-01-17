@@ -32,9 +32,9 @@ def K_means(dataset, K):
                 if dist <= min_dist:
                     min_dist = dist
                     cluster_values[i, :] = j
-
         # Set a cluster to each dataset row
         clustered_dataset = np.column_stack((dataset, cluster_values))
+
         # Updating centers
         for i in range(K):
             cluster = clustered_dataset[np.where(clustered_dataset[:, -1] == i)]

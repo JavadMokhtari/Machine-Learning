@@ -31,10 +31,6 @@ class MultiLayerPerceptron:
     def sigmoid(x):
         return 1 / (1 + np.exp(-x))
 
-    # Activation function derivative
-    def sigmoid_derivative(self, x):
-        return self.sigmoid(x) * (1 - self.sigmoid(x))
-
     def forward(self, net_input_row):
         net_neurons = list()
 
@@ -124,7 +120,7 @@ class MultiLayerPerceptron:
         np.random.shuffle(train_data)
         validation_data = np.split(train_data, k)
         accuracy_list = list()
-
+        # Adding accuracies to a list
         for i in range(k):
             index = [j * (i+1) for j in range(train_data.shape[0] // k)]
             train_data_clone = np.delete(train_data, index, 0)

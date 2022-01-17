@@ -1,8 +1,7 @@
-import importlib
 import numpy as np
 from matplotlib import pyplot as plt
 from ClusteringValidityIndices import RMSSTD
-Kmeans = importlib.import_module('K-means', '*')
+from Kmeans import K_means
 
 
 def find_optimal_K(input_dataset, max_K=10, iteration=100):
@@ -10,7 +9,6 @@ def find_optimal_K(input_dataset, max_K=10, iteration=100):
     for _iter in range(iteration):
         RMSSTD_values = list()
         for K in range(1, max_K):
-            K_means = Kmeans.__getattribute__('K_means')
             clustered = K_means(input_dataset, K)
 
             # Creating a list of clusters for CVI functions input
@@ -30,11 +28,13 @@ def find_optimal_K(input_dataset, max_K=10, iteration=100):
                 break
         K_values.append(optimal_K)
 
-    plt.plot([i for i in range(1, max_K)], RMSSTD_values)
-    plt.xlabel("Number of clusters")
-    plt.ylabel("RMSSTD")
+    # Setting figure of RMSSTD values by number of clusters
+    # plt.plot([i for i in range(1, max_K)], RMSSTD_values)
+    # plt.xlabel("Number of clusters")
+    # plt.ylabel("RMSSTD")
     # plt.savefig('../Results/Elbow_method_figure.jpg')
-    plt.show()
+    # plt.show()
+
     return max(set(K_values), key=K_values.count)
 
 

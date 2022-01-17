@@ -54,7 +54,7 @@ def main():
     data_in = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
     data_out = np.loadtxt('../Data/iris/iris_train_label.csv', delimiter=',')
     train_data = np.column_stack((data_in, data_out))
-    
+
     # Import test data
     data_test_in = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
     data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')

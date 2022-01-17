@@ -11,7 +11,7 @@ def euclidean_distance(row1, row2):
     return distance
 
 
-# We can classify an input data by the trining data with predict_classification() function
+# We can classify an input data by the training data with predict_classification() function
 def predict_classification(train, test_row):
     output_train = set(train[:, -1])
     distances = list()

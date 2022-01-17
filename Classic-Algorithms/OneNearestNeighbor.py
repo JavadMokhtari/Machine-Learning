@@ -32,8 +32,8 @@ def main():
     # Import test data
     data_test_in = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
     data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
-    test_size = len(data_test_out)
 
+    test_size = len(data_test_out)
     correct = 0
     # With this loop, we classify all the test dataset row and measure performance
     for i in range(test_size):

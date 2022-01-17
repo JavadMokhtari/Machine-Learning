@@ -2,8 +2,8 @@ import numpy as np
 from math import log, pi
 
 
-def dataset_mean(trian_data, class_label):
-    class_data = trian_data[np.where(trian_data[:, -1] == class_label)]
+def get_mean(train_data, class_label):
+    class_data = train_data[np.where(train_data[:, -1] == class_label)]
     column_values = [class_data[:, i] for i in range(class_data.shape[1] - 1)]
     mean_row = [np.sum(column_values[i]) / class_data.shape[0] for i in range(class_data.shape[1] - 1)]
     return mean_row
@@ -21,7 +21,7 @@ def multivariate_discrimination(train_data, class_label, test_row):
     prior = train_data[np.where(train_data[:, -1] == class_label)].shape[0]/train_data.shape[0]
     d = train_data.shape[1] - 1
     cov_matrix = dataset_cov(train_data, class_label)
-    class_mean = dataset_mean(train_data, class_label)
+    class_mean = get_mean(train_data, class_label)
     discrimination = log(prior) - 0.5 * d * log(2 * pi) - 0.5 * log(np.linalg.det(cov_matrix)) - 0.5 * \
         np.dot(np.dot(np.transpose(test_row - class_mean), np.linalg.inv(cov_matrix)), (test_row - class_mean))
     return discrimination

@@ -42,8 +42,6 @@ def K_means(dataset, K):
             if cluster.shape[0] == 0:
                 indx = np.random.randint(dataset_size)
                 new_center = dataset[indx, :]
-                print(new_center)
-
             else:
                 column_values = [cluster[:, i] for i in range(cluster.shape[1] - 1)]
                 new_center = np.array(

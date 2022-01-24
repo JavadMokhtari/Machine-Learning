@@ -3,7 +3,7 @@ import numpy as np
 
 class MultiLayerPerceptron:
 
-    def __init__(self, num_input=4, hidden_layers=None, num_output=3, learning_rate=0.01, epoch=2000):
+    def __init__(self, num_input=4, hidden_layers=None, num_output=3, learning_rate=0.01, epoch=1000):
 
         # hidden_layers is a list that contains number of neurons in each layer
         if hidden_layers is None:
@@ -44,10 +44,10 @@ class MultiLayerPerceptron:
 
         return net_neurons
 
-    def backpropagation(self, net_input_row, desired_output):
+    def backpropagation(self, net_input_row, class_label):
         # convert desired class value to numpy array
-        dic_output = {0: np.array([1, 0, 0]), 1: np.array([0, 1, 0]), 2: np.array([0, 0, 1])}
-        desired_output = np.reshape(dic_output[desired_output], (1, self.num_output))
+        desired_output = np.zeros((1, self.num_output))
+        desired_output[0][int(class_label)] = 1
 
         # The obtained output from forward
         net_neurons = self.forward(net_input_row)

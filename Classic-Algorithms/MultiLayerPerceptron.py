@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class MultiLayerPerceptron:
+class MLP:
 
     def __init__(self, num_input=4, hidden_layers=None, num_output=3, learning_rate=0.01, epoch=1000):
 
@@ -20,7 +20,7 @@ class MultiLayerPerceptron:
         weights = list()
         biases = list()
         for i in range(len(layers) - 1):
-            np.random.seed(1)
+            # np.random.seed(1)
             weights.append(np.random.normal(0, 1, (layers[i], layers[i + 1])))
             biases.append(np.random.normal(0, 1, (1, layers[i + 1])))
         self.weights = weights
@@ -104,6 +104,7 @@ class MultiLayerPerceptron:
         for p in predict:
             if p == 1:
                 return predict.index(p)
+        return 0
 
     # Make prediction and measure algorithm performance
     def calculate_performance(self, data_in, data_out):
@@ -143,7 +144,7 @@ def main():
     data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
 
     # Training with data
-    mlp = MultiLayerPerceptron()
+    mlp = MLP()
     mlp.train(data_train[:, :-1], data_train[:, -1])
 
     # Make prediction and measure algorithm performance
@@ -161,7 +162,7 @@ def main():
     print("\nAccuracy on test dataset: {:.2f}%".format(performance * 100))
     print('\nPlease wait ...\n')
 
-    mlp = MultiLayerPerceptron()
+    mlp = MLP()
     print('Performance with K fold validation:\n{:.2f}%'.format(mlp.K_fold_validation(data_train)))
 
 

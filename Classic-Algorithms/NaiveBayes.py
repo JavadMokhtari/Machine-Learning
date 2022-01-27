@@ -2,40 +2,42 @@ import numpy as np
 from math import log, pi
 
 
-def get_mean(train_data, class_label):
-    class_data = train_data[np.where(train_data[:, -1] == class_label)]
-    column_values = [class_data[:, i] for i in range(class_data.shape[1] - 1)]
-    mean_row = [np.sum(column_values[i]) / class_data.shape[0] for i in range(class_data.shape[1] - 1)]
-    return mean_row
+class NaiveBayes:
+    def __init__(self, train_data):
+        self.train_data = train_data
+        self.mean_row = None
+        self.cov_matrix = None
 
+    def get_mean(self, class_label):
+        class_data = self.train_data[np.where(self.train_data[:, -1] == class_label)]
+        column_values = [class_data[:, i] for i in range(class_data.shape[1] - 1)]
+        self.mean_row = [np.sum(column_values[i]) / class_data.shape[0] for i in range(class_data.shape[1] - 1)]
 
-def dataset_cov(train_data, class_label):
-    class_data = train_data[np.where(train_data[:, -1] == class_label)][:, :-1]
-    d = class_data.shape[1]
-    features = np.array([class_data[:, i] for i in range(d)])
-    cov_matrix = np.cov(features)
-    return cov_matrix
+    def dataset_cov(self, class_label):
+        class_data = self.train_data[np.where(self.train_data[:, -1] == class_label)][:, :-1]
+        d = class_data.shape[1]
+        features = np.array([class_data[:, i] for i in range(d)])
+        self.cov_matrix = np.cov(features)
 
+    def multivariate_discrimination(self, class_label, test_row):
+        prior = self.train_data[np.where(self.train_data[:, -1] == class_label)].shape[0] / self.train_data.shape[0]
+        d = self.train_data.shape[1] - 1
+        self.dataset_cov(class_label)
+        self.get_mean(class_label)
+        discrimination = log(prior) - 0.5 * d * log(2 * pi) - 0.5 * log(np.linalg.det(self.cov_matrix)) - 0.5 * \
+            np.dot(np.dot(np.transpose(test_row - self.mean_row), np.linalg.inv(self.cov_matrix)),
+                   (test_row - self.mean_row))
+        return discrimination
 
-def multivariate_discrimination(train_data, class_label, test_row):
-    prior = train_data[np.where(train_data[:, -1] == class_label)].shape[0]/train_data.shape[0]
-    d = train_data.shape[1] - 1
-    cov_matrix = dataset_cov(train_data, class_label)
-    class_mean = get_mean(train_data, class_label)
-    discrimination = log(prior) - 0.5 * d * log(2 * pi) - 0.5 * log(np.linalg.det(cov_matrix)) - 0.5 * \
-        np.dot(np.dot(np.transpose(test_row - class_mean), np.linalg.inv(cov_matrix)), (test_row - class_mean))
-    return discrimination
-
-
-def predict_classification(train_data, test_row):
-    train_outputs = set(train_data[:, -1])
-    results = list()
-    for class_label in train_outputs:
-        discrimination = multivariate_discrimination(train_data, class_label, test_row)
-        results.append((class_label, discrimination))
-    results.sort(key=lambda tup: tup[1])
-    predict = results[-1][0]
-    return predict
+    def predict_classification(self, test_row):
+        train_outputs = set(self.train_data[:, -1])
+        results = list()
+        for class_label in train_outputs:
+            discrimination = self.multivariate_discrimination(class_label, test_row)
+            results.append((class_label, discrimination))
+        results.sort(key=lambda tup: tup[1])
+        predict = results[-1][0]
+        return predict
 
 
 def main():
@@ -47,10 +49,11 @@ def main():
     data_test_in = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
     data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
 
+    naivebayes = NaiveBayes(train_data)
     correct = 0
     # With this loop, we classify all the test dataset row and measure performance
     for i in range(len(data_test_out)):
-        prediction = predict_classification(train_data, data_test_in[i])
+        prediction = naivebayes.predict_classification(data_test_in[i])
         real_value = data_test_out[i]
         print('For {} Expected {}, Got {}.'.format(data_test_in[i], real_value, prediction), end='  ')
         if real_value == prediction:

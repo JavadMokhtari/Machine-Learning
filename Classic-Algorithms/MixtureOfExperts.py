@@ -17,7 +17,7 @@ def euclidean_distance(row1, row2):
 
 
 class MOE:
-    def __init__(self, num_experts=5, lr_expert=0.01, lr_gate=0.01, epoch=5000):
+    def __init__(self, num_experts=5, lr_expert=0.01, lr_gate=0.01, epoch=200):
         self.input_dimension = 4
         self.num_class = 3
         self.epoch = epoch
@@ -38,6 +38,7 @@ class MOE:
             for j in range(self.input_dimension):
                 input_data[i, j] = input_data[i, j] / np.sum(input_data[:, j])
         # input_data /= 1000
+        # output_data /= 2
 
         desired_output = np.empty((data_size, self.num_class))
         for i in range(data_size):

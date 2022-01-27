@@ -24,7 +24,7 @@ def euclidean_distance(row1, row2):
     return distance
 
 
-class RadialBasisFunction:
+class RBF:
     # Initialization function
     def __init__(self, dataset, num_input=4, num_output=3, learning_rate=0.01, epoch=1000):
         self.dataset = dataset
@@ -33,7 +33,7 @@ class RadialBasisFunction:
 
         kmeans = Kmeans()
         self.num_hidden = kmeans.find_optimal_K(self.dataset)
-        print("\nThe optimal number of hidden neurons was found:\nK = {}\n".format(self.num_hidden))
+        # print("\nThe optimal number of hidden neurons was found:\nK = {}\n".format(self.num_hidden))
 
         self.learning_rate = learning_rate
         self.epoch = epoch
@@ -45,9 +45,9 @@ class RadialBasisFunction:
         self.centers = kmeans.centers
         self.spreads = kmeans.clusters_variance
 
-    def train(self, dataset):
+    def train(self):
         for epoch in range(self.epoch):
-            for row in dataset:
+            for row in self.dataset:
                 for i in range(self.num_hidden):
                     r = euclidean_distance(row[:-1], self.centers[i, :])
                     sig = self.spreads[i][0]
@@ -94,7 +94,7 @@ class RadialBasisFunction:
         for i in range(k):
             index = [j * (i+1) for j in range(train_data.shape[0] // k)]
             train_data_clone = np.delete(train_data, index, 0)
-            self.train(train_data_clone)
+            self.train()
             accuracy = self.calculate_performance(validation_data[i][:, :-1], validation_data[i][:, -1])
             accuracy_list.append(accuracy)
             print("{:.2f}%".format(accuracy * 100))
@@ -112,8 +112,8 @@ def main():
     input_test_data = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
     output_test_data = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
 
-    rbf = RadialBasisFunction(train_data)
-    rbf.train(train_data)
+    rbf = RBF(train_data)
+    rbf.train()
 
     correct = 0
     for i in range(output_test_data.shape[0]):

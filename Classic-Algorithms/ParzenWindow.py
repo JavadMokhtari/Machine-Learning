@@ -1,8 +1,6 @@
 import numpy as np
 from math import sqrt
 
-RADIUS = 1
-
 
 # Is defined for calculating Euclidean distance between two row of data
 def euclidean_distance(row1, row2):
@@ -14,7 +12,7 @@ def euclidean_distance(row1, row2):
 
 
 class ParzenWindow:
-    def __init__(self, train_data, radius):
+    def __init__(self, train_data, radius=1):
         self.radius = radius
         self.train_data = train_data
 
@@ -60,7 +58,7 @@ def main():
     data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
 
     correct = 0
-    parzen_algorithm = ParzenWindow(train_data, RADIUS)
+    parzen_algorithm = ParzenWindow(train_data)
     # With this loop, we classify all the test dataset row and measure performance
     for i in range(len(data_test_out)):
         prediction = parzen_algorithm.predict_classification(data_test_in[i])

@@ -17,17 +17,19 @@ def euclidean_distance(row1, row2):
 
 
 class MOE:
-    def __init__(self, num_experts=5, lr_expert=0.01, lr_gate=0.01, epoch=200):
+    def __init__(self, num_experts=5, lr_expert=0.01, lr_gate=0.01, epoch=1000):
         self.input_dimension = 4
         self.num_class = 3
         self.epoch = epoch
         self.lr_expert = lr_expert
         self.lr_gate = lr_gate
         self.num_experts = num_experts
+
         self.experts_weights = np.random.normal(0, 1, (self.num_experts, self.num_class, self.input_dimension))
         self.gate_weights = np.random.normal(0, 1, (self.num_experts, self.input_dimension))
-        # self.experts_biases = np.random.normal(0, 1, self.num_experts)
+        # self.experts_biases = np.random.normal(0, 1, (self.num_experts, self.num_class))
         # self.gate_biases = np.random.normal(0, 1, self.num_experts)
+
         self.output = np.zeros((self.num_experts, self.num_class))
         self.gate_output = np.zeros(self.num_experts)
         self.gate = np.zeros(self.num_experts)
@@ -38,7 +40,6 @@ class MOE:
             for j in range(self.input_dimension):
                 input_data[i, j] = input_data[i, j] / np.sum(input_data[:, j])
         # input_data /= 1000
-        # output_data /= 2
 
         desired_output = np.empty((data_size, self.num_class))
         for i in range(data_size):
@@ -62,24 +63,29 @@ class MOE:
                                        self.output[j]) ** 2) for j in range(self.num_experts)])
 
                 h = np.empty(self.gate.shape)
-                delta_ew = np.empty(self.experts_weights.shape)
-                delta_gw = np.empty(self.gate_weights.shape)
+                # delta_ew = np.empty(self.experts_weights.shape)
+                # delta_gw = np.empty(self.gate_weights.shape)
+                # delta_eb = np.empty(self.experts_biases.shape)
+                # delta_gb = np.empty(self.gate_biases.shape)
 
                 for i in range(self.num_experts):
                     error = euclidean_distance(desired_output[row], self.output[i])
                     h[i] = self.gate[i] * (-0.5 * error ** 2) / error_summation
 
-                    error = np.reshape(np.subtract(desired_output[row], self.output[i]), (3, 1))
-                    input_row = np.reshape(input_data[row], (1, 4))
-                    delta_ew = self.lr_expert * h[i] * np.dot(error, input_row)
-                    delta_gw = self.lr_gate * (h[i] - self.gate[i]) * input_data[row]
-                    # delta_eb = self.lr_expert * h[i] * (output_data[row] - self.output[i])
-                    # delta_gb = self.lr_gate * (h[i] - self.gate[i])
+                    # error = np.reshape(np.subtract(desired_output[row], self.output[i]), (3, 1))
+                    # input_row = np.reshape(input_data[row], (1, 4))
+                    # delta_ew = self.lr_expert * h[i] * np.dot(error, input_row)
 
-                self.experts_weights += delta_ew
-                self.gate_weights += delta_gw
+                    delta_ew = self.lr_expert * h[i] * error * input_data[row]
+
+                    delta_gw = self.lr_gate * (h[i] - self.gate[i]) * input_data[row]
+                    # delta_eb[i] = self.lr_expert * h[i] * np.reshape(error, self.num_class)
+                    # delta_gb[i] = self.lr_gate * (h[i] - self.gate[i])
+
+                    self.experts_weights[i] += delta_ew
+                    self.gate_weights[i] += delta_gw
                 # self.experts_biases += delta_eb
-                # self.experts_biases += delta_gb
+                # self.gate_biases += delta_gb
 
             # print(self.experts_biases)
         # print(self.experts_weights)
@@ -106,7 +112,9 @@ def main():
     moe = MOE()
     moe.train(data_in, data_out)
     for i in range(data_in.shape[0]):
-        print(np.exp(moe.predict_classification(data_in[i])))
+        output = np.exp(moe.predict_classification(data_in[i]))
+        output = np.array(list(map(round, output)))
+        print(output)
 
 
 if __name__ == "__main__":

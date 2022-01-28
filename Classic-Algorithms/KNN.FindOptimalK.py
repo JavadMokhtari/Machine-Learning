@@ -1,6 +1,4 @@
 import numpy as np
-from math import sqrt, log, ceil
-import random
 
 
 # Is defined for calculating Euclidean distance between two row of data
@@ -8,7 +6,7 @@ def euclidean_distance(row1, row2):
     distance = 0.0
     for i in range(len(row1)):
         distance += (row1[i] - row2[i]) ** 2
-    distance = sqrt(distance)
+    distance = np.sqrt(distance)
     return distance
 
 
@@ -25,7 +23,7 @@ def get_neighbors(train, test_row, k_neighbors):
     return neighbors
 
 
-# We can classify an input data by the trining data with predict_classification() function
+# We can classify an input data by the training data with predict_classification() function
 def predict_classification(train, test_row, k_neighbors):
     neighbors = get_neighbors(train, test_row, k_neighbors)
     output_values = [row[-1] for row in neighbors]
@@ -53,14 +51,14 @@ def find_optimal_K(train_data):
         data_size = train_data_clone.shape
         validation_size = data_size[0] // 10, data_size[1]
         validation_data = np.zeros(validation_size)
-        K_range = ceil(log(data_size[0], 10)) * 10
-        random.seed()
-        for i in range(validation_size[0]):
-            index = random.randrange(data_size[0])
-            validation_data[i, :] = train_data_clone[index]
+        K_range = np.ceil(np.log10(data_size[0])) * 10
+        np.random.seed(1)
+        for j in range(validation_size[0]):
+            index = np.random.randint(data_size[0])
+            validation_data[j, :] = train_data_clone[index]
             train_data_clone = np.delete(train_data_clone, index, 0)
             data_size = train_data_clone.shape
-        k_values = [i for i in range(1, K_range)]
+        k_values = [i for i in range(1, int(K_range))]
         for k in k_values:
             accuracy = calculate_accuracy(train_data_clone, validation_data[:, :-1], validation_data[:, -1], k)
             results.append((k, accuracy))

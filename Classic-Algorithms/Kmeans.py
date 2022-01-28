@@ -1,5 +1,4 @@
 import numpy as np
-from math import sqrt
 from matplotlib import pyplot as plt
 from ClusteringValidityIndices import Dunn, Davies_Bouldin, RMSSTD
 
@@ -9,7 +8,7 @@ def euclidean_distance(row1, row2):
     distance = 0.0
     for i in range(len(row1)):
         distance += (row1[i] - row2[i]) ** 2
-    distance = sqrt(distance)
+    distance = np.sqrt(distance)
     return distance
 
 
@@ -60,7 +59,7 @@ class Kmeans:
             # Calculating distance between new centers and previous centers
             for i in range(K):
                 error_vector[i] = euclidean_distance(new_centers[i, :], self.centers[i, :])
-            error = sqrt(np.dot(error_vector, error_vector))
+            error = np.sqrt(np.dot(error_vector, error_vector))
 
             iteration += 1
             # print("Relocation of centers in iteration {:2d}: {:.5f}".format(iteration, error))

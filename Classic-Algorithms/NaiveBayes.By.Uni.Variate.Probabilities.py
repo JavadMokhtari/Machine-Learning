@@ -1,9 +1,8 @@
 import numpy as np
-from math import log, pi
 
 
-def dataset_mean(trian_data, class_label):
-    class_data = trian_data[np.where(trian_data[:, -1] == class_label)]
+def dataset_mean(train_data, class_label):
+    class_data = train_data[np.where(train_data[:, -1] == class_label)]
     column_values = [class_data[:, i] for i in range(class_data.shape[1] - 1)]
     mean_row = [np.sum(column_values[i]) / class_data.shape[0] for i in range(class_data.shape[1] - 1)]
     return mean_row
@@ -18,8 +17,9 @@ def univariate_discrimination(train_data, class_label, test_row):
     for i in range(d):
         dim_var = np.var(class_data[:, i])
         dim_std = np.std(class_data[:, i])
-        discrimination = - 0.5 * log(2*pi) - 0.5 * log(dim_std) - np.subtract(test_row, class_mean)[i] ** 2 / (2 * dim_var)
-    discrimination += log(prior)
+        discrimination = - 0.5 * np.log(2 * np.pi) - 0.5 * np.log(dim_std) - np.subtract(test_row, class_mean)[i] ** 2\
+            / (2 * dim_var)
+    discrimination += np.log(prior)
     return discrimination
 
 

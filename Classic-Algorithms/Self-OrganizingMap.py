@@ -1,5 +1,4 @@
 import numpy as np
-from math import sqrt, exp
 from matplotlib import pyplot as plt
 
 
@@ -7,13 +6,13 @@ def euclidean_distance(row1, row2):
     distance = 0.0
     for i in range(len(row1)):
         distance += (row1[i] - row2[i]) ** 2
-    distance = sqrt(distance)
+    distance = np.sqrt(distance)
     return distance
 
 
 # Returns degree of neighborhood with respect to winner
 def neighborhood_coefficient(node1, node2):
-    return exp(-euclidean_distance(node1, node2)**2/2)
+    return np.exp(-euclidean_distance(node1, node2)**2/2)
 
 
 class SelfOrganizingMap:

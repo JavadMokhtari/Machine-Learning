@@ -1,5 +1,4 @@
 import numpy as np
-from math import log, pi
 
 
 class NaiveBayes:
@@ -24,9 +23,9 @@ class NaiveBayes:
         d = self.train_data.shape[1] - 1
         self.dataset_cov(class_label)
         self.get_mean(class_label)
-        discrimination = log(prior) - 0.5 * d * log(2 * pi) - 0.5 * log(np.linalg.det(self.cov_matrix)) - 0.5 * \
-            np.dot(np.dot(np.transpose(test_row - self.mean_row), np.linalg.inv(self.cov_matrix)),
-                   (test_row - self.mean_row))
+        discrimination = np.log(prior) - 0.5 * d * np.log(2 * np.pi) - 0.5 * np.log(np.linalg.det(self.cov_matrix)) - \
+            0.5 * np.dot(np.dot(np.transpose(test_row - self.mean_row), np.linalg.inv(self.cov_matrix)),
+                         (test_row - self.mean_row))
         return discrimination
 
     def predict_classification(self, test_row):

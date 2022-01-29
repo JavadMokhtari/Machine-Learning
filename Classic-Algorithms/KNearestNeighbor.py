@@ -1,4 +1,5 @@
 import numpy as np
+from os import path
 
 K = 10
 
@@ -27,10 +28,12 @@ class KNN:
             distances.append((row, dist))
         distances.sort(key=lambda tup: tup[1])
 
+        # Adding all neighbors in a list
         neighbors = list()
         for i in range(self.K):
             neighbors.append(distances[i][0])
 
+        # Return nearest neighbor label as input vector label
         output_values = [row[-1] for row in neighbors]
         prediction = max(set(output_values), key=output_values.count)
         return prediction
@@ -49,13 +52,17 @@ class KNN:
 
 def main():
     # Import train data
-    data_in = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
-    data_out = np.loadtxt('../Data/iris/iris_train_label.csv', delimiter=',')
+    input_path = path.join('..', 'Data', 'iris', 'iris_train.csv')
+    data_in = np.loadtxt(input_path, delimiter=',')
+    output_path = path.join('..', 'Data', 'iris', 'iris_train_label.csv')
+    data_out = np.loadtxt(output_path, delimiter=',')
     train_data = np.column_stack((data_in, data_out))
 
     # Import test data
-    data_test_in = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
-    data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
+    test_input_path = path.join('..', 'Data', 'iris', 'iris_test.csv')
+    data_test_in = np.loadtxt(test_input_path, delimiter=',')
+    test_output_path = path.join('..', 'Data', 'iris', 'iris_test_label.csv')
+    data_test_out = np.loadtxt(test_output_path, delimiter=',')
 
     correct = 0
     knn_algorithm = KNN(train_data, K)

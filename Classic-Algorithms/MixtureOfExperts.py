@@ -1,4 +1,5 @@
 import numpy as np
+from os import path
 
 
 # Activation function for experts
@@ -95,16 +96,20 @@ class MOE:
 
 def main():
     # Import train data
-    data_in = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
-    data_out = np.loadtxt('../Data/iris/iris_train_label.csv', delimiter=',')
+    input_path = path.join('..', 'Data', 'iris', 'iris_train.csv')
+    input_data = np.loadtxt(input_path, delimiter=',')
+    output_path = path.join('..', 'Data', 'iris', 'iris_train_label.csv')
+    output_data = np.loadtxt(output_path, delimiter=',')
 
     # Import test data
-    input_test_data = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
-    output_test_data = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
+    test_input_path = path.join('..', 'Data', 'iris', 'iris_test.csv')
+    input_test_data = np.loadtxt(test_input_path, delimiter=',')
+    test_output_path = path.join('..', 'Data', 'iris', 'iris_test_label.csv')
+    output_test_data = np.loadtxt(test_output_path, delimiter=',')
 
     # Training with data
     moe = MOE()
-    moe.train(data_in, data_out)
+    moe.train(input_data, output_data)
 
     # Predicting output on test data and getting performance
     correct = 0

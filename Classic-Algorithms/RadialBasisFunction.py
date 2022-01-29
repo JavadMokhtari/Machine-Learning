@@ -1,5 +1,6 @@
 import numpy as np
 from Kmeans import Kmeans
+from os import path
 
 
 # Is used as kernel function in input layer of RBF
@@ -104,12 +105,17 @@ class RBF:
 
 def main():
     # Import train data
-    input_data = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
-    output_data = np.loadtxt('../Data/iris/iris_train_label.csv', delimiter=',')
+    input_path = path.join('..', 'Data', 'iris', 'iris_train.csv')
+    input_data = np.loadtxt(input_path, delimiter=',')
+    output_path = path.join('..', 'Data', 'iris', 'iris_train_label.csv')
+    output_data = np.loadtxt(output_path, delimiter=',')
     train_data = np.column_stack((input_data, output_data))
 
-    input_test_data = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
-    output_test_data = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
+    # Import test data
+    test_input_path = path.join('..', 'Data', 'iris', 'iris_test.csv')
+    input_test_data = np.loadtxt(test_input_path, delimiter=',')
+    test_output_path = path.join('..', 'Data', 'iris', 'iris_test_label.csv')
+    output_test_data = np.loadtxt(test_output_path, delimiter=',')
 
     rbf = RBF(train_data)
     rbf.train()

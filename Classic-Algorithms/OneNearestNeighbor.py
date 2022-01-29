@@ -1,4 +1,5 @@
 import numpy as np
+from os import path
 
 
 # Is defined for calculating Euclidean distance between two row of data
@@ -24,13 +25,17 @@ def predict_classification(train, test_row):
 
 def main():
     # Import train data
-    data_in = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
-    data_out = np.loadtxt('../Data/iris/iris_train_label.csv', delimiter=',')
+    input_path = path.join('..', 'Data', 'iris', 'iris_train.csv')
+    data_in = np.loadtxt(input_path, delimiter=',')
+    output_path = path.join('..', 'Data', 'iris', 'iris_train_label.csv')
+    data_out = np.loadtxt(output_path, delimiter=',')
     train_data = np.column_stack((data_in, data_out))
 
     # Import test data
-    data_test_in = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
-    data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
+    test_input_path = path.join('..', 'Data', 'iris', 'iris_test.csv')
+    data_test_in = np.loadtxt(test_input_path, delimiter=',')
+    test_output_path = path.join('..', 'Data', 'iris', 'iris_test_label.csv')
+    data_test_out = np.loadtxt(test_output_path, delimiter=',')
 
     test_size = len(data_test_out)
     correct = 0

@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from ClusteringValidityIndices import Dunn, Davies_Bouldin, RMSSTD
+from os import path
 
 
 # Is defined for calculating Euclidean distance between two rows of data
@@ -105,7 +106,8 @@ class Kmeans:
 
 def main():
     # import iris data and clustering
-    input_data = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
+    input_path = path.join('..', 'Data', 'iris', 'iris_train.csv')
+    input_data = np.loadtxt(input_path, delimiter=',')
 
     kmeans = Kmeans()
     optimal_K = kmeans.find_optimal_K(input_data)
@@ -142,7 +144,8 @@ def main():
 
     img = ax.scatter(x1, x2, x3, s=x4, c=clusters_labels, cmap='turbo')
     fig.colorbar(img)
-    # plt.savefig('../Results/K-means.scatter.jpg')
+    # save_path = path.join('..', 'Results', 'K-means.scatter.jpg')
+    # plt.savefig(save_path)
     plt.show()
 
 

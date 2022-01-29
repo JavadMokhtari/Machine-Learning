@@ -1,5 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from os import path
 
 
 def euclidean_distance(row1, row2):
@@ -72,7 +73,10 @@ class SelfOrganizingMap:
 
 
 def main():
-    input_data = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
+    # Import data
+    input_path = path.join('..', 'Data', 'iris', 'iris_train.csv')
+    input_data = np.loadtxt(input_path, delimiter=',')
+
     som = SelfOrganizingMap()
     som.train(input_data)
     iris_clustered = som.set_cluster(input_data)
@@ -90,7 +94,8 @@ def main():
     img = ax.scatter(x1, x2, x3, s=x4, c=clusters, cmap='turbo')
     fig.colorbar(img)
     plt.show()
-    plt.savefig('../Results/SOM.scatter.jpg')
+    save_path = path.join('..', 'Results', 'SOM.scatter.jpg')
+    plt.savefig(save_path)
 
 
 if __name__ == "__main__":

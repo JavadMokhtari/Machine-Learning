@@ -4,6 +4,7 @@ from KNearestNeighbor import KNN
 from NaiveBayes import NaiveBayes
 from ParzenWindow import ParzenWindow
 from RadialBasisFunction import RBF
+from os import path
 
 
 class voting_combiner:
@@ -37,12 +38,16 @@ class voting_combiner:
 
 def main():
     # Import train data
-    input_data = np.loadtxt('../Data/iris/iris_train.csv', delimiter=',')
-    output_data = np.loadtxt('../Data/iris/iris_train_label.csv', delimiter=',')
+    input_path = path.join('..', 'Data', 'iris', 'iris_train.csv')
+    input_data = np.loadtxt(input_path, delimiter=',')
+    output_path = path.join('..', 'Data', 'iris', 'iris_train_label.csv')
+    output_data = np.loadtxt(output_path, delimiter=',')
 
     # Import test data
-    data_test_in = np.loadtxt('../Data/iris/iris_test.csv', delimiter=',')
-    data_test_out = np.loadtxt('../Data/iris/iris_test_label.csv', delimiter=',')
+    test_input_path = path.join('..', 'Data', 'iris', 'iris_test.csv')
+    data_test_in = np.loadtxt(test_input_path, delimiter=',')
+    test_output_path = path.join('..', 'Data', 'iris', 'iris_test_label.csv')
+    data_test_out = np.loadtxt(test_output_path, delimiter=',')
 
     correct = 0
     static_combiner = voting_combiner(input_data, output_data)
